@@ -19,8 +19,8 @@ import android.speech.RecognizerIntent;
 public class VoiceRecognitionActivity extends Activity {
 
     private static final int VOICE_RECOGNITION_REQUEST_CODE = 1234;
-	private boolean isVoiceRecognitionEnabled = false;
-	
+    private boolean isVoiceRecognitionEnabled = false;
+    
     /**
      * Called with the activity is first created.
      */
@@ -34,9 +34,9 @@ public class VoiceRecognitionActivity extends Activity {
                 new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH), 0);
         isVoiceRecognitionEnabled = (activities.size() != 0);
         if (isVoiceRecognitionEnabled) {
-        	startVoiceRecognitionActivity();
+            startVoiceRecognitionActivity();
         } else {
-        	sendResult(null, isVoiceRecognitionEnabled, false);
+            sendResult(null, isVoiceRecognitionEnabled, false);
         }
     }
 
@@ -54,32 +54,32 @@ public class VoiceRecognitionActivity extends Activity {
     /**
      * Handle the results from the recognition activity.
      */
-	@Override
+    @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == VOICE_RECOGNITION_REQUEST_CODE) {
-        	if (resultCode == RESULT_OK) {
-	            // Fill the list view with the strings the recognizer thought it could have heard
-	            ArrayList<String> matches = data.getStringArrayListExtra(
-	                    RecognizerIntent.EXTRA_RESULTS);
-	            Log.d("VoiceRecognitionActivity", "recognition result received");
-	            for (int i = 0; i < matches.size(); i++) {
-	            	Log.d("VoiceRecognitionActivity", matches.get(i));
-	            }
-	            sendResult(matches, true, false);
-        	}
-        	if (resultCode == RESULT_CANCELED) {
-	            sendResult(null, true, true);        		
-        	}
+            if (resultCode == RESULT_OK) {
+                // Fill the list view with the strings the recognizer thought it could have heard
+                ArrayList<String> matches = data.getStringArrayListExtra(
+                        RecognizerIntent.EXTRA_RESULTS);
+                Log.d("VoiceRecognitionActivity", "recognition result received");
+                for (int i = 0; i < matches.size(); i++) {
+                    Log.d("VoiceRecognitionActivity", matches.get(i));
+                }
+                sendResult(matches, true, false);
+            }
+            if (resultCode == RESULT_CANCELED) {
+                sendResult(null, true, true);                
+            }
         }
     }
-	
-	/**
-	 * send result to the source activity
-	 */
-	private void sendResult(ArrayList<String> matches, boolean enabled, boolean canceled) {
-		if (matches == null) {
-			matches = new ArrayList<String>();
-		}
+    
+    /**
+     * send result to the source activity
+     */
+    private void sendResult(ArrayList<String> matches, boolean enabled, boolean canceled) {
+        if (matches == null) {
+            matches = new ArrayList<String>();
+        }
         Intent fromIntent = getIntent();
         Messenger msger = fromIntent.getParcelableExtra("VOICE_RESULT_MESSENGER");
         Message msg = new Message();
@@ -89,10 +89,10 @@ public class VoiceRecognitionActivity extends Activity {
         bundle.putStringArrayList("VOICE_RESULT", matches);
         msg.setData(bundle);
         try {
-			msger.send(msg);
-		} catch (RemoteException e) {
-			e.printStackTrace();
-		}
-        finish();		
-	}
+            msger.send(msg);
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+        finish();        
+    }
 }
