@@ -44,10 +44,26 @@ public class VoiceRecognitionActivity extends Activity {
      * Fire an intent to start the speech recognition activity.
      */
     private void startVoiceRecognitionActivity() {
-        Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
-        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,
-                RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
-        intent.putExtra(RecognizerIntent.EXTRA_PROMPT, "Speech recognition demo");
+    	Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+    	
+    	//
+    	//  overriding option value
+    	//
+    	Intent fromIntent = getIntent();
+        if (fromIntent.getStringExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL) != null) {
+        	String extra_lang_model = fromIntent.getStringExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL);
+        	Log.d("VoiceRecognitionActivity",
+          		  "overriding RecognizerIntent.EXTRA_LANGUAGE_MODEL -> " + extra_lang_model
+            );
+        	intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, extra_lang_model);
+        }
+        if (fromIntent.getStringExtra(RecognizerIntent.EXTRA_PROMPT) != null) {
+        	String extra_prompt = fromIntent.getStringExtra(RecognizerIntent.EXTRA_PROMPT);
+        	Log.d("VoiceRecognitionActivity",
+        		  "overriding RecognizerIntent.EXTRA_PROMPT -> " + extra_prompt
+            );            
+        	intent.putExtra(RecognizerIntent.EXTRA_PROMPT, extra_prompt);
+        }
         startActivityForResult(intent, VOICE_RECOGNITION_REQUEST_CODE);
     }
 

@@ -29,7 +29,7 @@ The voicerecognition variable is a reference to the Module object.
 
 ## Usage
 
-A) Download org.mumumu.ti.android.speech-android-0.1.zip and place it to your Titanium project root.
+A) Download org.mumumu.ti.android.speech-android-0.2.zip and place it to your Titanium project root.
 
 B) add the following setting to tiapp.xml between &lt;ti:app&gt; tag.
 
@@ -41,29 +41,33 @@ B) add the following setting to tiapp.xml between &lt;ti:app&gt; tag.
         </manifest>
     </android>
     <modules>
-        <module version="0.1">org.mumumu.ti.android.speech</module>
+        <module version="0.2">org.mumumu.ti.android.speech</module>
     </modules>
 
 C) Invoke the module code.
 
     if (Ti.Platform.name == "android") {
-	    var speechModule = require('org.mumumu.ti.android.speech');
-	    var voiceRecognitionProxy = speechModule.createVoiceRecognition();
-	    voiceRecognitionProxy.callback = function (e) {
-	        var voice_recognition_enabled = e.voice_enabled;
-	        var voice_results = e.voice_results;
-	        if (e.voice_canceled) {
-	        	alert("voice recognition canceled");
-	        } else {
-	        	if (!voice_recognition_enabled) {
-	        	    alert("voice recognition seems to be disabled");
-	        	} else {
-	        	    alert(voice_results[0]);
-	        	}
-	        }
-	    };
-	    voiceRecognitionProxy.voiceRecognition();
-	}
+        var speechModule = require('org.mumumu.ti.android.speech');
+        var voiceRecognitionProxy = speechModule.createVoiceRecognition();
+        var callback_func = function (e) {
+            var voice_recognition_enabled = e.voice_enabled;
+            var voice_results = e.voice_results;
+            if (e.voice_canceled) {
+                alert("voice recognition canceled");
+            } else {
+                if (!voice_recognition_enabled) {
+                    alert("voice recognition seems to be disabled");
+                } else {
+                    alert(voice_results[0]); //  array.
+                }
+            }
+        };
+        voiceRecognitionProxy.voiceRecognition({
+            "android.speech.extra.PROMPT": "please say something",
+            "android.speech.extra.LANGUAGE_MODEL": "free_form",
+            "callback": callback_func
+        });
+    }
     
 ## Author
 

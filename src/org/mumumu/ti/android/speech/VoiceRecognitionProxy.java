@@ -3,6 +3,7 @@ package org.mumumu.ti.android.speech;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import org.appcelerator.kroll.KrollDict;
 import org.appcelerator.kroll.KrollFunction;
 import org.appcelerator.kroll.KrollProxy;
 import org.appcelerator.kroll.annotations.Kroll;
@@ -15,6 +16,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.os.Messenger;
+import android.speech.RecognizerIntent;
 
 //
 // This proxy can be created by calling Voicerecognition.createVoiceRecognition()
@@ -34,8 +36,9 @@ public class VoiceRecognitionProxy extends KrollProxy
     
     @SuppressWarnings({ "unchecked", "rawtypes" })
     @Kroll.method
-    public void voiceRecognition() {    
-        Log.d(TAG, "Voice Recognition entry point");
+    public void voiceRecognition(KrollDict options) {    
+        
+    	Log.d(TAG, "Voice Recognition entry point");
         Activity currentActivity = getActivity();
         Intent intent = new Intent(
                             currentActivity.getApplicationContext(),
@@ -43,6 +46,19 @@ public class VoiceRecognitionProxy extends KrollProxy
                         );
         intent.setAction(Intent.ACTION_VIEW);
         
+        //
+        //  You can override callback functions.
+        //
+        if (callback == null && options != null
+         && options.containsKey("callback")
+         && (options.get("callback") instanceof KrollFunction)) {
+        	Log.d(TAG, "overriding callback value");
+        	callback = (KrollFunction)options.get("callback");
+        }
+        
+        //
+        //  activity result handling
+        //
         Handler handler = new Handler() {
             public void handleMessage(Message msg) {
                 Log.d(TAG, "Voice Recognition result handled.");
@@ -61,8 +77,24 @@ public class VoiceRecognitionProxy extends KrollProxy
                 }
             }
         };
+        
+        //
+        //    invoke main Activity.
+        //
         Messenger msger = new Messenger(handler);
         intent.putExtra("VOICE_RESULT_MESSENGER", msger);
+        if (options != null) {
+        	if (options.containsKey(RecognizerIntent.EXTRA_LANGUAGE_MODEL)) {
+        		String extraVal = (String)options.get(RecognizerIntent.EXTRA_LANGUAGE_MODEL);
+        		Log.d(TAG, "overriding RecognizerIntent.EXTRA_LANGUAGE_MODEL value -> " + extraVal);
+        		intent.putExtra("android.speech.extra.LANGUAGE_MODEL", extraVal);
+            }
+            if (options.containsKey(RecognizerIntent.EXTRA_PROMPT)) {
+            	String extraVal = (String)options.get(RecognizerIntent.EXTRA_PROMPT);
+            	Log.d(TAG, "overriding RecognizerIntent.EXTRA_PROMPT value");
+            	intent.putExtra(RecognizerIntent.EXTRA_PROMPT, extraVal);
+            }
+        }
         try {
             currentActivity.startActivity(intent);
         } catch (ActivityNotFoundException e) {
