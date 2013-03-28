@@ -1,4 +1,6 @@
-0.3 - a)use TiBaseActivity#launchActivityForResult() instead of startActivityForResult() and intercept activity (VoiceRecognitionActivity)
+0.3 - a)use TiBaseActivity#launchActivityForResult() instead of startActivityForResult() 
+        and intercept activity (VoiceRecognitionActivity).
+        no more need adding <Activity>tag.
 	  b)use Ti SDK 2.1.0GA for Intel atom support
 	  
 0.2 - a) Now you can set the following Intent Setting.
