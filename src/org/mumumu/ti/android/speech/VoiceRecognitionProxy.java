@@ -10,6 +10,7 @@ import org.appcelerator.kroll.KrollProxy;
 import org.appcelerator.kroll.annotations.Kroll;
 import org.appcelerator.kroll.common.Log;
 import org.appcelerator.titanium.TiApplication;
+import org.appcelerator.titanium.TiC;
 import org.appcelerator.titanium.util.TiActivityResultHandler;
 
 import android.app.Activity;
@@ -36,11 +37,20 @@ public class VoiceRecognitionProxy extends KrollProxy implements TiActivityResul
      * Fire an intent to start the speech recognition activity.
      */
     private void startVoiceRecognitionActivity(KrollDict options) {
-    	Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+        //
+        //  You can override callback functions.
+        //
+        if (callback == null && options != null
+         && options.containsKey("callback")
+         && (options.get("callback") instanceof KrollFunction)) {
+        	Log.d(TAG, "overriding callback value");
+        	callback = (KrollFunction)options.get("callback");
+        }
     	
     	//
     	//  overriding option value
     	//
+       	Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
         if (options != null) {
         	if (options.containsKey(RecognizerIntent.EXTRA_LANGUAGE_MODEL)) {
         		String extraVal = (String)options.get(RecognizerIntent.EXTRA_LANGUAGE_MODEL);
@@ -57,11 +67,15 @@ public class VoiceRecognitionProxy extends KrollProxy implements TiActivityResul
     }
     
     private void sendResult(ArrayList<String> matches, boolean enabled, boolean canceled) {
+    	if (callback == null) {
+    		return;
+    	}
         if (matches == null) {
             matches = new ArrayList<String>();
         }
-       HashMap<String,Object> resultmap = new HashMap<String,Object>();
+        HashMap<String,Object> resultmap = new HashMap<String,Object>();
         String[] result_string_array = matches.toArray(new String[0]);
+        resultmap.put(TiC.EVENT_PROPERTY_SOURCE, VoiceRecognitionProxy.this);
         resultmap.put("voice_results", result_string_array);
         resultmap.put("voice_enabled", enabled);
         resultmap.put("voice_canceled", canceled);
@@ -70,23 +84,13 @@ public class VoiceRecognitionProxy extends KrollProxy implements TiActivityResul
  
     @Kroll.setProperty @Kroll.method
     public void setCallback(KrollFunction func) {
-        this.callback = func;
+    	this.callback = func;
     }
     
     @SuppressWarnings({ "unchecked", "rawtypes" })
     @Kroll.method
-    public void voiceRecognition(KrollDict options) {    
-        
+    public void voiceRecognition(KrollDict options) {      
     	Log.d(TAG, "Voice Recognition entry point");
-        //
-        //  You can override callback functions.
-        //
-        if (callback == null && options != null
-         && options.containsKey("callback")
-         && (options.get("callback") instanceof KrollFunction)) {
-        	Log.d(TAG, "overriding callback value");
-        	callback = (KrollFunction)options.get("callback");
-        }
         // Check to see if a recognition activity is present
         PackageManager pm = TiApplication.getInstance().getPackageManager();
         List<ResolveInfo> activities = pm.queryIntentActivities(
@@ -102,9 +106,16 @@ public class VoiceRecognitionProxy extends KrollProxy implements TiActivityResul
    
 
     @Override
-	public void onError(Activity arg0, int arg1, Exception arg2) {
-		// TODO Auto-generated method stub
-		
+	public void onError(Activity activity, int requestCode, Exception e) {
+		if (VOICE_RECOGNITION_REQUEST_CODE == requestCode) {
+	    	if (callback == null) {
+	    		return;
+	    	}
+	        HashMap<String,Object> resultmap = new HashMap<String,Object>();
+	        resultmap.put("voice_error_message", e.getLocalizedMessage());
+	        resultmap.put(TiC.EVENT_PROPERTY_SOURCE, VoiceRecognitionProxy.this);
+	        callback.callAsync(getKrollObject(), resultmap);    
+		}
 	}
 
  	@Override
