@@ -31,20 +31,7 @@ The voicerecognition variable is a reference to the Module object.
 
 A) Download org.mumumu.ti.android.speech-android-0.1.zip and place it to your Titanium project root.
 
-B) add the following setting to tiapp.xml between <ti:app> tag.
-
-    <android xmlns:android="http://schemas.android.com/apk/res/android">
-        <manifest>
-            <application>
-                <activity android:name="org.mumumu.ti.android.speech.VoiceRecognitionActivity" />
-            </application>
-        </manifest>
-    </android>
-    <modules>
-        <module version="0.1">org.mumumu.ti.android.speech</module>
-    </modules>
-
-C) Invoke the module code.
+B) Invoke the module code.
 
     if (Ti.Platform.name == "android") {
 	    var speechModule = require('org.mumumu.ti.android.speech');

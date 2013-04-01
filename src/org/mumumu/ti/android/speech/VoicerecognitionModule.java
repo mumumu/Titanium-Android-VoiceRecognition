@@ -27,26 +27,4 @@ public class VoicerecognitionModule extends KrollModule
         Log.d(LCAT, "inside onAppCreate");
         // put module init code that needs to run when the application is created
     }
-
-    // Methods
-    @Kroll.method
-    public String example()
-    {
-        Log.d(LCAT, "example called");
-        return "hello world";
-    }
-    
-    // Properties
-    @Kroll.getProperty
-    public String getExampleProp()
-    {
-        Log.d(LCAT, "get example property");
-        return "hello world";
-    }
-    
-    
-    @Kroll.setProperty
-    public void setExampleProp(String value) {
-        Log.d(LCAT, "set example property: " + value);
-    }
 }

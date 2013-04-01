@@ -2,7 +2,7 @@
 # this is your module manifest and used by Titanium
 # during compilation, packaging, distribution, etc.
 #
-version: 0.2
+version: 0.3
 apiversion: 2
 description: Voice Recognition Titanium Module for Android.
 author: Yoshinari Takaoka
@@ -15,4 +15,4 @@ name: voicerecognition
 moduleid: org.mumumu.ti.android.speech
 guid: 827e6c44-0fe2-4180-ac0a-e94591f37324
 platform: android
-minsdk: 2.0.1.GA2
+minsdk: 2.1.0.GA
