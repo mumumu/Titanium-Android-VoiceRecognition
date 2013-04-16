@@ -11,13 +11,12 @@ call callback function correctly.
 
 http://www.matthuggins.com/articles/android-voice-recognition-in-appcelerator-titanium
 
-Using this module, we can get Voice Recognition result correctly on Android 2.x, 3.x  
-Note: I don't test this module on Android 4.x. If you can test it, please let me know the result.
+Using this module, we can get Voice Recognition result correctly on Android 2.x, 3.x, 4.0.3, 4.2  
       
 ## Requirement
 
-Android min-sdk: Android 2.1 (API Level 7)  
-Titanium 2.0.1GA
+Android min-sdk: Android 2.2 (API Level 8)  
+Titanium 2.1.2GA
 
 ## Accessing the voicerecognition Module
 
@@ -29,19 +28,14 @@ The voicerecognition variable is a reference to the Module object.
 
 ## Usage
 
-A) Download org.mumumu.ti.android.speech-android-0.2.zip and place it to your Titanium project root.
+O) download repository archive from this site.
+
+A) place dist/org.mumumu.ti.android.speech-android-0.3.zip to your Titanium project root.
 
 B) add the following setting to tiapp.xml between &lt;ti:app&gt; tag.
 
-    <android xmlns:android="http://schemas.android.com/apk/res/android">
-        <manifest>
-            <application>
-                <activity android:name="org.mumumu.ti.android.speech.VoiceRecognitionActivity" />
-            </application>
-        </manifest>
-    </android>
     <modules>
-        <module version="0.2">org.mumumu.ti.android.speech</module>
+        <module version="0.3">org.mumumu.ti.android.speech</module>
     </modules>
 
 C) Invoke the module code.
@@ -68,7 +62,7 @@ C) Invoke the module code.
             "callback": callback_func
         });
     }
-    
+
 ## Author
 
 Yoshinari Takaoka (reversethis -> gro tod umumum ta umumum)

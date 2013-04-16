@@ -11,13 +11,12 @@ call callback function correctly.
 
 http://www.matthuggins.com/articles/android-voice-recognition-in-appcelerator-titanium
 
-Using this module, we can get Voice Recognition result correctly on Android 2.x, 3.x
-Note: I don't test this module on Android 4.x. If you can test it, please let me know the result.
+Using this module, we can get Voice Recognition result correctly on Android 2.x, 3.x, 4.0.3, 4.2  
       
-## Requrement
+## Requirement
 
-Android min-sdk: Android 2.1 (API Level 7)
-Titanium 2.0.1GA
+Android min-sdk: Android 2.2 (API Level 8)  
+Titanium 2.1.2GA
 
 ## Accessing the voicerecognition Module
 
@@ -29,29 +28,41 @@ The voicerecognition variable is a reference to the Module object.
 
 ## Usage
 
-A) Download org.mumumu.ti.android.speech-android-0.1.zip and place it to your Titanium project root.
+O) download repository archive from this site.
 
-B) Invoke the module code.
+A) place dist/org.mumumu.ti.android.speech-android-0.3.zip to your Titanium project root.
+
+B) add the following setting to tiapp.xml between &lt;ti:app&gt; tag.
+
+    <modules>
+        <module version="0.3">org.mumumu.ti.android.speech</module>
+    </modules>
+
+C) Invoke the module code.
 
     if (Ti.Platform.name == "android") {
-	    var speechModule = require('org.mumumu.ti.android.speech');
-	    var voiceRecognitionProxy = speechModule.createVoiceRecognition();
-	    voiceRecognitionProxy.callback = function (e) {
-	        var voice_recognition_enabled = e.voice_enabled;
-	        var voice_results = e.voice_results;
-	        if (e.voice_canceled) {
-	        	alert("voice recognition canceled");
-	        } else {
-	        	if (!voice_recognition_enabled) {
-	        	    alert("voice recognition seems to be disabled");
-	        	} else {
-	        	    alert(voice_results[0]);
-	        	}
-	        }
-	    };
-	    voiceRecognitionProxy.voiceRecognition();
-	}
-    
+        var speechModule = require('org.mumumu.ti.android.speech');
+        var voiceRecognitionProxy = speechModule.createVoiceRecognition();
+        var callback_func = function (e) {
+            var voice_recognition_enabled = e.voice_enabled;
+            var voice_results = e.voice_results;
+            if (e.voice_canceled) {
+                alert("voice recognition canceled");
+            } else {
+                if (!voice_recognition_enabled) {
+                    alert("voice recognition seems to be disabled");
+                } else {
+                    alert(voice_results[0]); //  array.
+                }
+            }
+        };
+        voiceRecognitionProxy.voiceRecognition({
+            "android.speech.extra.PROMPT": "please say something",
+            "android.speech.extra.LANGUAGE_MODEL": "free_form",
+            "callback": callback_func
+        });
+    }
+
 ## Author
 
 Yoshinari Takaoka (reversethis -> gro tod umumum ta umumum)

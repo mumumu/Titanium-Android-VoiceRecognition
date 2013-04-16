@@ -1,8 +1,9 @@
-0.3 - a)use TiBaseActivity#launchActivityForResult() instead of startActivityForResult() 
-        and intercept activity (VoiceRecognitionActivity).
-        no more need adding <Activity>tag.
-	  b)use Ti SDK 2.1.0GA for Intel atom support
-	  
+0.3 - a) use TiBaseActivity#launchActivityForResult() instead of startActivityForResult() 
+         and intercept activity (VoiceRecognitionActivity).
+         no more need adding <Activity>tag.
+      b) use Ti SDK 2.1.0GA and above for Intel atom support (experimental)
+      c) This module now officially works on Android 4.0.3, 4.2.
+  
 0.2 - a) Now you can set the following Intent Setting.
          1. RecognizerIntent.EXTRA_LANGUAGE_MODEL
          2. RecognizerIntent.EXTRA_PROMPT

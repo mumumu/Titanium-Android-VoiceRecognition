@@ -27,7 +27,7 @@ public class VoiceRecognitionProxy extends KrollProxy implements TiActivityResul
 
 {
     
-    private static final String TAG = "VoiceRecognitionProxy";
+    private final String TAG = "VoiceRecognitionProxy";
     // callback function for getting Voice Recognition result
     private KrollFunction callback = null;
 
@@ -87,7 +87,6 @@ public class VoiceRecognitionProxy extends KrollProxy implements TiActivityResul
     	this.callback = func;
     }
     
-    @SuppressWarnings({ "unchecked", "rawtypes" })
     @Kroll.method
     public void voiceRecognition(KrollDict options) {      
     	Log.d(TAG, "Voice Recognition entry point");
@@ -98,12 +97,10 @@ public class VoiceRecognitionProxy extends KrollProxy implements TiActivityResul
         boolean isVoiceRecognitionEnabled = (activities.size() != 0);
         if (isVoiceRecognitionEnabled) {
             startVoiceRecognitionActivity(options);
-        } else {
+        } else { 
             sendResult(null, isVoiceRecognitionEnabled, false);
         }
     }
-
-   
 
     @Override
 	public void onError(Activity activity, int requestCode, Exception e) {
