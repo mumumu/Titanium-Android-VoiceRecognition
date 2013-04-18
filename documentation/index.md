@@ -16,7 +16,12 @@ Using this module, we can get Voice Recognition result correctly on Android 2.x,
 ## Requirement
 
 Android min-sdk: Android 2.2 (API Level 8)  
-Titanium 2.1.2GA
+Titanium 2.1.2GA or later
+
+## Supported Architecture
+
+- ARM (armeabi-v7a)
+- Intel x86 (experimental. If you send me a test report, I will highly appriciated)
 
 ## Accessing the voicerecognition Module
 
