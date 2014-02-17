@@ -62,6 +62,11 @@ public class VoiceRecognitionProxy extends KrollProxy implements TiActivityResul
             	Log.d(TAG, "overriding RecognizerIntent.EXTRA_PROMPT value");
                	intent.putExtra(RecognizerIntent.EXTRA_PROMPT, extraVal);
             }
+            if (options.containsKey(RecognizerIntent.EXTRA_LANGUAGE_PREFERENCE)) {
+            	String extraVal = (String)options.get(RecognizerIntent.EXTRA_LANGUAGE_PREFERENCE);
+            	Log.d(TAG, "overriding RecognizerIntent.EXTRA_LANGUAGE_PREFERENCE value");
+               	intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_PREFERENCE, extraVal);
+            }            
         }
         TiApplication.getInstance().getRootActivity().launchActivityForResult(intent, VOICE_RECOGNITION_REQUEST_CODE, this);
     }
