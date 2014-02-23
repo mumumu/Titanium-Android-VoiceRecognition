@@ -43,33 +43,33 @@ public class VoiceRecognitionProxy extends KrollProxy implements TiActivityResul
         if (callback == null && options != null
          && options.containsKey("callback")
          && (options.get("callback") instanceof KrollFunction)) {
-        	Log.d(TAG, "overriding callback value");
-        	callback = (KrollFunction)options.get("callback");
+            Log.d(TAG, "overriding callback value");
+            callback = (KrollFunction)options.get("callback");
         }
-    	
-    	//
-    	//  overriding option value
-    	//
-       	Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+        
+        //
+        //  overriding option value
+        //
+        Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
         if (options != null) {
-        	if (options.containsKey(RecognizerIntent.EXTRA_LANGUAGE_MODEL)) {
-        		String extraVal = (String)options.get(RecognizerIntent.EXTRA_LANGUAGE_MODEL);
-        		Log.d(TAG, "overriding RecognizerIntent.EXTRA_LANGUAGE_MODEL value -> " + extraVal);
-            	intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, extraVal);
+            if (options.containsKey(RecognizerIntent.EXTRA_LANGUAGE_MODEL)) {
+                String extraVal = (String)options.get(RecognizerIntent.EXTRA_LANGUAGE_MODEL);
+                Log.d(TAG, "overriding RecognizerIntent.EXTRA_LANGUAGE_MODEL value -> " + extraVal);
+                intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, extraVal);
             }
             if (options.containsKey(RecognizerIntent.EXTRA_PROMPT)) {
-            	String extraVal = (String)options.get(RecognizerIntent.EXTRA_PROMPT);
-            	Log.d(TAG, "overriding RecognizerIntent.EXTRA_PROMPT value");
-               	intent.putExtra(RecognizerIntent.EXTRA_PROMPT, extraVal);
+                String extraVal = (String)options.get(RecognizerIntent.EXTRA_PROMPT);
+                Log.d(TAG, "overriding RecognizerIntent.EXTRA_PROMPT value");
+                   intent.putExtra(RecognizerIntent.EXTRA_PROMPT, extraVal);
             }
         }
         TiApplication.getInstance().getRootActivity().launchActivityForResult(intent, VOICE_RECOGNITION_REQUEST_CODE, this);
     }
     
     private void sendResult(ArrayList<String> matches, boolean enabled, boolean canceled) {
-    	if (callback == null) {
-    		return;
-    	}
+        if (callback == null) {
+            return;
+        }
         if (matches == null) {
             matches = new ArrayList<String>();
         }
@@ -84,12 +84,12 @@ public class VoiceRecognitionProxy extends KrollProxy implements TiActivityResul
  
     @Kroll.setProperty @Kroll.method
     public void setCallback(KrollFunction func) {
-    	this.callback = func;
+        this.callback = func;
     }
     
     @Kroll.method
     public void voiceRecognition(KrollDict options) {      
-    	Log.d(TAG, "Voice Recognition entry point");
+        Log.d(TAG, "Voice Recognition entry point");
         // Check to see if a recognition activity is present
         PackageManager pm = TiApplication.getInstance().getPackageManager();
         List<ResolveInfo> activities = pm.queryIntentActivities(
@@ -103,20 +103,20 @@ public class VoiceRecognitionProxy extends KrollProxy implements TiActivityResul
     }
 
     @Override
-	public void onError(Activity activity, int requestCode, Exception e) {
-		if (VOICE_RECOGNITION_REQUEST_CODE == requestCode) {
-	    	if (callback == null) {
-	    		return;
-	    	}
-	        HashMap<String,Object> resultmap = new HashMap<String,Object>();
-	        resultmap.put("voice_error_message", e.getLocalizedMessage());
-	        resultmap.put(TiC.EVENT_PROPERTY_SOURCE, VoiceRecognitionProxy.this);
-	        callback.callAsync(getKrollObject(), resultmap);    
-		}
-	}
+    public void onError(Activity activity, int requestCode, Exception e) {
+        if (VOICE_RECOGNITION_REQUEST_CODE == requestCode) {
+            if (callback == null) {
+                return;
+            }
+            HashMap<String,Object> resultmap = new HashMap<String,Object>();
+            resultmap.put("voice_error_message", e.getLocalizedMessage());
+            resultmap.put(TiC.EVENT_PROPERTY_SOURCE, VoiceRecognitionProxy.this);
+            callback.callAsync(getKrollObject(), resultmap);    
+        }
+    }
 
- 	@Override
-	public void onResult(Activity activity, int requestCode, int resultCode, Intent data) {
+     @Override
+    public void onResult(Activity activity, int requestCode, int resultCode, Intent data) {
         if (requestCode == VOICE_RECOGNITION_REQUEST_CODE) {
             if (resultCode == Activity.RESULT_OK) {
                 // Fill the list view with the strings the recognizer thought it could have heard
@@ -131,5 +131,5 @@ public class VoiceRecognitionProxy extends KrollProxy implements TiActivityResul
                 sendResult(null, true, true);                
             }
         }
-	}
+    }
 }
